@@ -1,6 +1,7 @@
 import { User } from 'src/user/entities/user.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
+import { Track } from 'src/track/entities/track.entity';
 
 const now = Date.now();
 
@@ -24,8 +25,19 @@ export const artists: Artist[] = [
 ];
 export const albums: Album[] = [
   new Album({
-    id: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec01',
+    id: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec03',
     name: 'First',
     year: 2024,
+  }),
+];
+
+export const tracks: Track[] = [
+  new Track({
+    id: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec04',
+    name: 'For how long?',
+    albumId: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec03',
+    artistId: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec01',
+
+    duration: 3.25,
   }),
 ];
