@@ -2,6 +2,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
 import { Track } from 'src/track/entities/track.entity';
+import { Fav } from 'src/favs/entities/fav.entity';
 
 const now = Date.now();
 
@@ -41,3 +42,9 @@ export const tracks: Track[] = [
     duration: 3.25,
   }),
 ];
+
+export const favs: Fav = new Fav({
+  albums: [],
+  artists: [],
+  tracks: [],
+});

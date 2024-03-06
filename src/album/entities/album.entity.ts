@@ -1,5 +1,9 @@
-export class Album {
-  constructor(public params: IAlbum) {}
+import { FavorableEntity } from 'src/entity';
+
+export class Album extends FavorableEntity {
+  constructor(public params: IAlbum) {
+    super();
+  }
 }
 
 interface IAlbum {

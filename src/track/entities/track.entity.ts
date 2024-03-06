@@ -1,5 +1,9 @@
-export class Track {
-  constructor(public params: ITrack) {}
+import { FavorableEntity } from 'src/entity';
+
+export class Track extends FavorableEntity {
+  constructor(public params: ITrack) {
+    super();
+  }
 }
 
 interface ITrack {
