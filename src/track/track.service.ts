@@ -10,6 +10,8 @@ export class TrackService {
   create(createTrackDto: CreateTrackDto) {
     const newTrack: Track = new Track({
       id: v4(),
+      albumId: null,
+      artistId: null,
       ...createTrackDto,
     });
     tracks.push(newTrack);
@@ -21,7 +23,9 @@ export class TrackService {
   }
 
   findOne(id: string) {
-    const track: Track = tracks.find((track: Track) => track.params.id === id);
+    const track: Track = tracks.find(
+      (track: Track) => track?.params?.id === id,
+    );
     if (!track) throw new NotFoundException('Track Not Found');
     return track;
   }
@@ -33,7 +37,8 @@ export class TrackService {
   }
 
   remove(id: string) {
-    const index = tracks.findIndex((Track) => Track.params.id === id);
+    const index: number = tracks.findIndex((track) => track?.params?.id === id);
+    if (index === -1) throw new NotFoundException('Track Not Found');
     delete tracks[index];
   }
 }

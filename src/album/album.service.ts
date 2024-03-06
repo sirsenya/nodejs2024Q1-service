@@ -10,6 +10,7 @@ export class AlbumService {
   create(createAlbumDto: CreateAlbumDto) {
     const newAlbum: Album = new Album({
       id: v4(),
+      artistId: null,
       ...createAlbumDto,
     });
     albums.push(newAlbum);
@@ -21,7 +22,9 @@ export class AlbumService {
   }
 
   findOne(id: string) {
-    const album: Album = albums.find((album: Album) => album.params.id === id);
+    const album: Album = albums.find(
+      (album: Album) => album?.params?.id === id,
+    );
     if (!album) throw new NotFoundException('Album Not Found');
     return album;
   }
@@ -33,7 +36,8 @@ export class AlbumService {
   }
 
   remove(id: string) {
-    const index = albums.findIndex((album) => album.params.id === id);
+    const index = albums.findIndex((album) => album?.params?.id === id);
+    if (index === -1) throw new NotFoundException('Album Not Found');
     delete albums[index];
   }
 }

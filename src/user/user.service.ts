@@ -29,7 +29,7 @@ export class UserService {
   }
 
   findOne(id: string): User {
-    const user: User = users.find((user: User) => user.params.id === id);
+    const user: User = users.find((user: User) => user?.params?.id === id);
     if (!user) throw new NotFoundException('User Not Found');
     return user;
   }
@@ -46,7 +46,8 @@ export class UserService {
   }
 
   remove(id: string) {
-    const index = users.findIndex((user) => user.params.id === id);
+    const index = users.findIndex((user) => user?.params?.id === id);
+    if (index === -1) throw new NotFoundException('User Not Found');
     delete users[index];
   }
 }

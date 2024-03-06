@@ -13,11 +13,11 @@ export class CreateTrackDto {
 
   @IsOptional()
   @IsUUID()
-  artistId?: string | null; // refers to Artist
+  artistId: string | null; // refers to Artist
 
   @IsOptional()
   @IsUUID()
-  albumId?: string | null; // refers to Album
+  albumId: string | null; // refers to Album
 
   @IsNumber()
   duration: number;

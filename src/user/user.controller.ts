@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   UseInterceptors,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdatePasswordDto } from './dto/update-user.dto';
@@ -42,6 +43,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.remove(id);
   }

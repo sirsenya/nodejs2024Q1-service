@@ -22,7 +22,7 @@ export class ArtistService {
 
   findOne(id: string) {
     const artist: Artist = artists.find(
-      (artist: Artist) => artist.params.id === id,
+      (artist: Artist) => artist?.params?.id === id,
     );
     if (!artist) throw new NotFoundException('Artist Not Found');
     return artist;
@@ -35,7 +35,8 @@ export class ArtistService {
   }
 
   remove(id: string) {
-    const index = artists.findIndex((artist) => artist.params.id === id);
+    const index = artists.findIndex((artist) => artist?.params?.id === id);
+    if (index === -1) throw new NotFoundException('Artist Not Found');
     delete artists[index];
   }
 }
