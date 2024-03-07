@@ -2,15 +2,12 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
   Delete,
   ParseUUIDPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
-import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
 
 @Controller('favs')
 export class FavsController {
@@ -20,15 +17,6 @@ export class FavsController {
   findAll() {
     return this.favsService.findAll();
   }
-
-  // @Post('album/:id')
-  // addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favsService.addAlbum(id);
-  // }
-  // @Post('artist/:id')
-  // addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favsService.addArtist(id);
-  // }
   @Post(':entity/:id')
   addFavs(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -37,15 +25,8 @@ export class FavsController {
     return this.favsService.addFavs(id, entity);
   }
 
-  // @Delete('album/:id')
-  // deleteAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favsService.deleteAlbum(id);
-  // }
-  // @Delete('artist/:id')
-  // deleteArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favsService.deleteArtist(id);
-  // }
   @Delete(':entity/:id')
+  @HttpCode(204)
   deleteFavs(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Param('entity') entity: string,

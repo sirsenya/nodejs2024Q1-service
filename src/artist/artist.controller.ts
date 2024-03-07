@@ -19,17 +19,17 @@ export class ArtistController {
 
   @Post()
   create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistService.create(createArtistDto);
+    return this.artistService.create(createArtistDto).params;
   }
 
   @Get()
   findAll() {
-    return this.artistService.findAll();
+    return this.artistService.findAll().map((artist) => artist.params);
   }
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.artistService.findOne(id);
+    return this.artistService.findOne(id).params;
   }
 
   @Put(':id')
@@ -37,7 +37,7 @@ export class ArtistController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    return this.artistService.update(id, updateArtistDto);
+    return this.artistService.update(id, updateArtistDto).params;
   }
 
   @Delete(':id')

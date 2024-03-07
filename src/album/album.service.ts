@@ -37,7 +37,7 @@ export class AlbumService {
 
   remove(id: string) {
     const index = albums.findIndex((album) => album?.params?.id === id);
-    if (index === -1) throw new NotFoundException('Album Not Found');
-    delete albums[index];
+    if (index < 0) throw new NotFoundException('Album Not Found');
+    albums.splice(index, 1);
   }
 }

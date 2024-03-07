@@ -20,17 +20,17 @@ export class TrackController {
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
-    return this.trackService.create(createTrackDto);
+    return this.trackService.create(createTrackDto).params;
   }
 
   @Get()
   findAll() {
-    return this.trackService.findAll();
+    return this.trackService.findAll().map((track) => track.params);
   }
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.trackService.findOne(id);
+    return this.trackService.findOne(id).params;
   }
 
   @Put(':id')
@@ -38,7 +38,7 @@ export class TrackController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    return this.trackService.update(id, updateTrackDto);
+    return this.trackService.update(id, updateTrackDto).params;
   }
 
   @Delete(':id')

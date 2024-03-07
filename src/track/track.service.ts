@@ -3,7 +3,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { tracks } from 'src/db/in_memory_db';
 import { v4 } from 'uuid';
-import { Track } from './entities/track.entity';
+import { ITrack, Track } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
@@ -38,7 +38,7 @@ export class TrackService {
 
   remove(id: string) {
     const index: number = tracks.findIndex((track) => track?.params?.id === id);
-    if (index === -1) throw new NotFoundException('Track Not Found');
-    delete tracks[index];
+    if (index < 0) throw new NotFoundException('Track Not Found');
+    tracks.splice(index, 1);
   }
 }

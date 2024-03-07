@@ -30,13 +30,13 @@ export class ArtistService {
 
   update(id: string, updateArtistDto: UpdateArtistDto) {
     let artist: Artist = this.findOne(id);
-    artist.params = Object.assign(artist.params, updateArtistDto);
+    artist.params = { ...artist.params, ...updateArtistDto };
     return artist;
   }
 
   remove(id: string) {
     const index = artists.findIndex((artist) => artist?.params?.id === id);
-    if (index === -1) throw new NotFoundException('Artist Not Found');
-    delete artists[index];
+    if (index < 0) throw new NotFoundException('Artist Not Found');
+    artists.splice(index, 1);
   }
 }

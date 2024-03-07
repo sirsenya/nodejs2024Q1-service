@@ -47,7 +47,7 @@ export class UserService {
 
   remove(id: string) {
     const index = users.findIndex((user) => user?.params?.id === id);
-    if (index === -1) throw new NotFoundException('User Not Found');
-    delete users[index];
+    if (index < 0) throw new NotFoundException('User Not Found');
+    users.splice(index, 1);
   }
 }
