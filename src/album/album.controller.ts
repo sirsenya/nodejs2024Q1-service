@@ -19,17 +19,17 @@ export class AlbumController {
 
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumService.create(createAlbumDto);
+    return this.albumService.create(createAlbumDto).params;
   }
 
   @Get()
   findAll() {
-    return this.albumService.findAll();
+    return this.albumService.findAll().map((album) => album.params);
   }
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.albumService.findOne(id);
+    return this.albumService.findOne(id).params;
   }
 
   @Put(':id')
@@ -37,7 +37,7 @@ export class AlbumController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    return this.albumService.update(id, updateAlbumDto);
+    return this.albumService.update(id, updateAlbumDto).params;
   }
 
   @Delete(':id')

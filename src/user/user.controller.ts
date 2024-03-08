@@ -3,11 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseUUIDPipe,
-  UseInterceptors,
   Put,
   HttpCode,
 } from '@nestjs/common';

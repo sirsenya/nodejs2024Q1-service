@@ -1,9 +1,9 @@
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { tracks } from 'src/db/in_memory_db';
+import { favs, tracks } from 'src/db/in_memory_db';
 import { v4 } from 'uuid';
-import { ITrack, Track } from './entities/track.entity';
+import { Track } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
@@ -31,7 +31,7 @@ export class TrackService {
   }
 
   update(id: string, updateTrackDto: UpdateTrackDto) {
-    let track: Track = this.findOne(id);
+    const track: Track = this.findOne(id);
     track.params = { ...track.params, ...updateTrackDto };
     return track;
   }
@@ -40,5 +40,11 @@ export class TrackService {
     const index: number = tracks.findIndex((track) => track?.params?.id === id);
     if (index < 0) throw new NotFoundException('Track Not Found');
     tracks.splice(index, 1);
+
+    const favsArr: string[] = favs.params.tracks;
+    const favsIndex = favsArr.findIndex((trackId) => trackId === id);
+    if (favsIndex >= 0) {
+      favsArr.splice(favsIndex, 1);
+    }
   }
 }

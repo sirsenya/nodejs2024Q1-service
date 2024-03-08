@@ -6,7 +6,7 @@ export class Album extends FavorableEntity {
   }
 }
 
-interface IAlbum {
+export interface IAlbum {
   id: string; // uuid v4
   name: string;
   year: number;

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { albums } from 'src/db/in_memory_db';
+import { albums, favs, tracks } from 'src/db/in_memory_db';
 import { v4 } from 'uuid';
 import { Album } from './entities/album.entity';
 
@@ -30,7 +30,7 @@ export class AlbumService {
   }
 
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    let album: Album = this.findOne(id);
+    const album: Album = this.findOne(id);
     album.params = { ...album.params, ...updateAlbumDto };
     return album;
   }
@@ -39,5 +39,17 @@ export class AlbumService {
     const index = albums.findIndex((album) => album?.params?.id === id);
     if (index < 0) throw new NotFoundException('Album Not Found');
     albums.splice(index, 1);
+
+    const favsArr: string[] = favs.params.albums;
+    const favsIndex = favsArr.findIndex((albumId) => albumId === id);
+    if (favsIndex >= 0) {
+      favsArr.splice(favsIndex, 1);
+    }
+
+    tracks.forEach((track) => {
+      if (track.params.albumId === id) {
+        track.params.albumId = null;
+      }
+    });
   }
 }

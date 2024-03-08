@@ -29,7 +29,7 @@ export const albums: Album[] = [
     id: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec03',
     name: 'First',
     year: 2024,
-    artistId: null,
+    artistId: 'f188e7c4-32fd-45f8-bfaa-018e6a9fec01',
   }),
 ];
 

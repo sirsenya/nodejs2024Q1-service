@@ -8,9 +8,9 @@ import { albums, artists, favs, tracks } from 'src/db/in_memory_db';
 import { FavorableEntity } from 'src/entity';
 import { IFavorites, IFavoritesResponse } from './entities/fav.entity';
 
-const ALBUM: string = 'album';
-const TRACK: string = 'track';
-const ARTIST: string = 'artist';
+const ALBUM = 'album';
+const TRACK = 'track';
+const ARTIST = 'artist';
 
 const favsEntities: iFavEntity[] = [
   { address: ALBUM, array: albums },
@@ -35,7 +35,7 @@ export class FavsService {
 
     for (let i = 0; i < favsEntities.length; i++) {
       const favEntity: iFavEntity = favsEntities[i];
-      const objectKey: string = `${favEntity.address}s`;
+      const objectKey = `${favEntity.address}s`;
       const value: string[] = favsClone[objectKey];
       response[objectKey] = value.map(
         (id: string) =>
@@ -64,10 +64,9 @@ export class FavsService {
         422,
       );
     }
-    const arrayKey: string = `${entityAddress}s`;
+    const arrayKey = `${entityAddress}s`;
     const favArray: string[] = favs.params[arrayKey];
     const alreadyInFavs: boolean = favArray.includes(id);
-    console.log(alreadyInFavs);
     if (alreadyInFavs)
       throw new HttpException(`This ${entityAddress} is already in favs`, 409);
 

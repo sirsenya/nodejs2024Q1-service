@@ -1,9 +1,5 @@
-import { FavorableEntity } from 'src/entity';
-
-export class User extends FavorableEntity {
-  constructor(public params: IUser) {
-    super();
-  }
+export class User {
+  constructor(public params: IUser) {}
   hidePassword(): Omit<IUser, 'password'> {
     const copyWithoutPassword = { ...this.params };
     copyWithoutPassword.password = undefined;
