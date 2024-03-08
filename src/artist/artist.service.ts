@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { albums, artists, favs, tracks } from 'src/db/in_memory_db';
+import { albums, artists, favs, tracks } from 'db/in_memory_db';
 import { Artist } from './entities/artist.entity';
 import { v4 } from 'uuid';
 

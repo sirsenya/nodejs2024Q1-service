@@ -5,7 +5,6 @@ import {
   SwaggerModule,
   DocumentBuilder,
   SwaggerDocumentOptions,
-  SwaggerCustomOptions,
 } from '@nestjs/swagger';
 import { config } from 'dotenv';
 

@@ -1,7 +1,7 @@
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { favs, tracks } from 'src/db/in_memory_db';
+import { favs, tracks } from 'db/in_memory_db';
 import { v4 } from 'uuid';
 import { Track } from './entities/track.entity';
 

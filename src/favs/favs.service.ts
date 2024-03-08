@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { albums, artists, favs, tracks } from 'src/db/in_memory_db';
+import { albums, artists, favs, tracks } from 'db/in_memory_db';
 import { FavorableEntity } from 'src/entity';
 import { IFavorites, IFavoritesResponse } from './entities/fav.entity';
 
