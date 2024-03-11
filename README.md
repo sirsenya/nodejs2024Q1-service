@@ -6,7 +6,7 @@ To run and test the program you might consider doing the following:
 2. npm i;
 3. rename .env.example file to .env, for the port variable is there;
 4. npm start;
-5. npm run test; should be the following result: Test Suites: 5 failed, 5 passed, 10 total Tests: 27 failed, 67 passed, 94 total. Only 67 tests are passed for the following task; I suppose other tests
+5. in a separate terminal window: "npm run test"; should be the following result: Test Suites: 5 failed, 5 passed, 10 total Tests: 27 failed, 67 passed, 94 total. Only 67 tests are passed for the following task; I suppose other tests
    are going to be resolved in the future assignments.
 6. npm run lint - make sure there are no errors;
 7. open the source folder and behold the separation of modules in accordance with nest customs;
