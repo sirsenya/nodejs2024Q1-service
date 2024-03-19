@@ -1,97 +1,148 @@
 import {
   BadRequestException,
   HttpException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { albums, artists, favs, tracks } from 'db/in_memory_db';
-import { FavorableEntity } from 'src/entity';
-import { IFavorites, IFavoritesResponse } from './entities/fav.entity';
+import { PrismaService } from 'src/database/prisma.service';
+import {
+  Album as AlbumDb,
+  Artist as ArtistDb,
+  Favs,
+  PrismaPromise,
+  Track as TrackDb,
+} from '@prisma/client';
+import { IFavoritesResponse } from './entities/fav.entity';
+import { Album } from 'src/album/entities/album.entity';
+import { Artist } from 'src/artist/entities/artist.entity';
+import { Track } from 'src/track/entities/track.entity';
 
 const ALBUM = 'album';
 const TRACK = 'track';
 const ARTIST = 'artist';
 
-const favsEntities: iFavEntity[] = [
-  { address: ALBUM, array: albums },
-  { address: TRACK, array: tracks },
-  { address: ARTIST, array: artists },
-];
+type PrismaFavorableEntity = AlbumDb | ArtistDb | TrackDb;
 
 interface iFavEntity {
   address: string;
-  array: FavorableEntity[];
+  array: PrismaPromise<PrismaFavorableEntity[]>;
 }
 
 @Injectable()
 export class FavsService {
-  findAll() {
-    const favsClone: IFavorites = Object.assign({}, favs.params);
-    const response: IFavoritesResponse = {
-      artists: [],
-      albums: [],
-      tracks: [],
-    };
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
-    for (let i = 0; i < favsEntities.length; i++) {
-      const favEntity: iFavEntity = favsEntities[i];
-      const objectKey = `${favEntity.address}s`;
-      const value: string[] = favsClone[objectKey];
-      response[objectKey] = value.map(
-        (id: string) =>
-          favEntity.array.find(
-            (entity: FavorableEntity) => entity.params.id === id,
-          ).params,
-      );
-    }
+  private favsEntities: iFavEntity[] = [
+    {
+      address: ALBUM,
+      array: this.prisma.album.findMany({}),
+    },
+    { address: TRACK, array: this.prisma.track.findMany({}) },
+    { address: ARTIST, array: this.prisma.artist.findMany({}) },
+  ];
+
+  async findAll(): Promise<IFavoritesResponse> {
+    const favs = await this.prisma.favs.findFirst({
+      include: { albums: true, artists: true, tracks: true },
+    });
+
+    const response: IFavoritesResponse = {
+      albums: !favs?.albums
+        ? []
+        : favs.albums.map((album) => {
+            album.favsId = undefined;
+            return new Album(album).params;
+          }),
+      artists: !favs?.artists
+        ? []
+        : favs.artists.map((artist) => {
+            artist.favsId = undefined;
+            return new Artist(artist).params;
+          }),
+      tracks: !favs?.tracks
+        ? []
+        : favs.tracks.map((track) => {
+            track.favsId = undefined;
+            return new Track(track).params;
+          }),
+    };
     return response;
   }
 
-  addFavs(id: string, entityAddress: string) {
-    const favEntity: iFavEntity | undefined = favsEntities.find(
+  async addFavs(id: string, entityAddress: string) {
+    const favEntity: iFavEntity | undefined = this.favsEntities.find(
       (value: iFavEntity) => value.address === entityAddress,
     );
     if (!favEntity)
       throw new BadRequestException(`route ${entityAddress} doesn't exist`);
-    const entityArray: FavorableEntity[] = favEntity.array;
-    const entity: FavorableEntity = entityArray.find(
-      (entity) => entity.params.id === id,
+    const arrayKey = `${entityAddress}s`;
+    const entityArray: PrismaFavorableEntity[] = await this.prisma[
+      entityAddress
+    ].findMany({ include: {} });
+    const entity = entityArray.find(
+      (entity: PrismaFavorableEntity) => entity.id === id,
     );
 
     if (!entity) {
       throw new HttpException(
-        `${entityAddress} with ${id} not found in ${entityAddress}s' db`,
+        `${entityAddress} with ${id} not found in ${arrayKey}' db`,
         422,
       );
     }
-    const arrayKey = `${entityAddress}s`;
-    const favArray: string[] = favs.params[arrayKey];
-    const alreadyInFavs: boolean = favArray.includes(id);
+
+    const allFavs: Favs = await this.prisma.favs.findFirst({
+      include: { albums: true, artists: true, tracks: true },
+    });
+    console.log(allFavs);
+    const alreadyInFavs: boolean = allFavs[arrayKey]
+      .map((entity: PrismaFavorableEntity) => entity.id)
+      .includes(id);
     if (alreadyInFavs)
       throw new HttpException(`This ${entityAddress} is already in favs`, 409);
 
-    favs.params[arrayKey].push(id);
+    await this.prisma.favs.update({
+      where: { id: allFavs.id },
+      data: {
+        [arrayKey]: {
+          connect: {
+            id,
+          },
+        },
+      },
+    });
+
     return `${entityAddress} added to the favs`;
   }
 
-  deleteFavs(id: string, entityAddress: string) {
-    const favEntity: iFavEntity | undefined = favsEntities.find(
+  async deleteFavs(id: string, entityAddress: string) {
+    const favEntity: iFavEntity | undefined = this.favsEntities.find(
       (value: iFavEntity) => value.address === entityAddress,
     );
     if (!favEntity)
       throw new BadRequestException(`route ${entityAddress} doesn't exist`);
 
-    const favArray: string[] = favs.params[`${entityAddress}s`];
-
-    const index: number = favArray.findIndex(
-      (entityId: string) => entityId === id,
+    const allFavs: Favs = await this.prisma.favs.findFirst({
+      include: { albums: true, artists: true, tracks: true },
+    });
+    const arrayKey = `${entityAddress}s`;
+    const entity = allFavs[arrayKey].find(
+      (entity: PrismaFavorableEntity) => entity.id === id,
     );
 
-    if (index < 0) {
+    if (!entity) {
       throw new NotFoundException(
         `${entityAddress} with ${id} not found in favs`,
       );
     }
-    favArray.splice(index, 1);
+
+    await this.prisma.favs.update({
+      where: { id: allFavs.id },
+      data: {
+        [arrayKey]: {
+          disconnect: { id },
+        },
+      },
+    });
   }
 }

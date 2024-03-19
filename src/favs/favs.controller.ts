@@ -14,23 +14,23 @@ export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
   @Get()
-  findAll() {
-    return this.favsService.findAll();
+  async findAll() {
+    return await this.favsService.findAll();
   }
   @Post(':entity/:id')
-  addFavs(
+  async addFavs(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Param('entity') entity: string,
   ) {
-    return this.favsService.addFavs(id, entity);
+    return await this.favsService.addFavs(id, entity);
   }
 
   @Delete(':entity/:id')
   @HttpCode(204)
-  deleteFavs(
+  async deleteFavs(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Param('entity') entity: string,
   ) {
-    return this.favsService.deleteFavs(id, entity);
+    return await this.favsService.deleteFavs(id, entity);
   }
 }
