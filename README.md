@@ -14,7 +14,7 @@ To run and test the program you might consider doing the following:
 
 7. in separate terminal window (terminal 2) run: "npm run lint"; Should be no detected errors;
 
-8. in terminal 2 run: "npm run scan"; This scans for vulnerabilities (+10 Implemented npm script for vulnerabilities scanning (free solution)).
+8. in terminal 2 run: "npm run scan"; This scans for vulnerabilities (+10 Implemented npm script for vulnerabilities scanning (free solution)). You have to be logged in Docker to use this scan (in terminal 2 run "docker login");
    There are vulnerabilities since the assignment only requires to scan but not to eliminate them;
 
 9. in terminal 2 run: "npm run test"; 67/67 tests should be passed;
