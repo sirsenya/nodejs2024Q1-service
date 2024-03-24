@@ -7,6 +7,7 @@ import {
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
 import { config } from 'dotenv';
+import { CustomLogger } from './custom-logger/custom-logger.service';
 
 config();
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()

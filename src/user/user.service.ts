@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  Scope,
 } from '@nestjs/common';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,10 +11,14 @@ import { v4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { User as UserDb } from '@prisma/client';
+import { REQUEST } from '@nestjs/core';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class UserService {
-  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private prisma: PrismaService,
+    @Inject(REQUEST) private readonly request: Request,
+  ) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
     const now = Date.now();
     const newUser: User = new User({

@@ -8,11 +8,14 @@ import {
   Put,
   ParseUUIDPipe,
   HttpCode,
+  Req,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { ITrack, Track } from './entities/track.entity';
+import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
+import { ActiveUserData } from 'src/iam/interfaces/active-user-datea.interface';
 
 @Controller('track')
 export class TrackController {
@@ -25,7 +28,8 @@ export class TrackController {
   }
 
   @Get()
-  async findAll(): Promise<ITrack[]> {
+  async findAll(@ActiveUser() user: ActiveUserData): Promise<ITrack[]> {
+    console.log(user);
     const tracks: Track[] = await this.trackService.findAll();
     return tracks.map((track) => track.params);
   }

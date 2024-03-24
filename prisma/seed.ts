@@ -9,8 +9,6 @@ async function main() {
       id: v4(),
     },
   });
-
-  console.log({ alice });
 }
 main()
   .then(async () => {

@@ -77,12 +77,18 @@ export class FavsService {
     if (!favEntity)
       throw new BadRequestException(`route ${entityAddress} doesn't exist`);
     const arrayKey = `${entityAddress}s`;
+    console.log('arrayKey');
+    console.log(arrayKey);
     const entityArray: PrismaFavorableEntity[] = await this.prisma[
       entityAddress
     ].findMany({ include: {} });
+
     const entity = entityArray.find(
       (entity: PrismaFavorableEntity) => entity.id === id,
     );
+
+    console.log('entity');
+    console.log(entity);
 
     if (!entity) {
       throw new HttpException(
@@ -94,7 +100,10 @@ export class FavsService {
     const allFavs: Favs = await this.prisma.favs.findFirst({
       include: { albums: true, artists: true, tracks: true },
     });
+
+    console.log('allFavs');
     console.log(allFavs);
+
     const alreadyInFavs: boolean = allFavs[arrayKey]
       .map((entity: PrismaFavorableEntity) => entity.id)
       .includes(id);
