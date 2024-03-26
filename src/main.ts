@@ -14,6 +14,14 @@ config();
 const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
+  process.on('unhandledRejection', (reason: string, p: Promise<any>) => {
+    console.error('Unhandled Rejection at:', p, 'reason:', reason);
+  });
+  process.on('uncaughtException', (error: Error) => {
+    console.error(
+      `Caught exception: ${error}\n` + `Exception origin: ${error.stack}`,
+    );
+  });
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });

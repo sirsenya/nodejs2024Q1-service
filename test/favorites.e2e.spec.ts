@@ -82,7 +82,6 @@ describe('Favorites (e2e)', () => {
         .send(createArtistDto);
 
       expect(createArtistResponse.status).toBe(StatusCodes.CREATED);
-      console.log(createArtistResponse.status);
       const {
         body: { id: artistId },
       } = createArtistResponse;

@@ -27,7 +27,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: request.url,
     });
-    const content = `${log}\n`;
+    const content = `ERROR: ${log}\n`;
     const fileName = '/src/custom-logger/logs/errors';
     const fileType = '.txt';
     try {

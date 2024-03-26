@@ -33,9 +33,7 @@ export class AuthService {
     private readonly logger: CustomLogger,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
-  ) {
-    this.logger.setContext('AuthService');
-  }
+  ) {}
 
   async signUp(signUpDto: SignUpDto, request: Request) {
     this.logger.log(request.url);
@@ -63,8 +61,6 @@ export class AuthService {
       },
     });
 
-    //console.log(user);
-
     if (!user) {
       throw new UnauthorizedException('User with this login not found');
     }
@@ -73,8 +69,6 @@ export class AuthService {
       password,
       user.password,
     );
-
-    // console.log(isEqual);
 
     if (!isEqual) {
       throw new UnauthorizedException('Wrong password');

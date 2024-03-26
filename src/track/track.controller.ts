@@ -29,7 +29,6 @@ export class TrackController {
 
   @Get()
   async findAll(@ActiveUser() user: ActiveUserData): Promise<ITrack[]> {
-    console.log(user);
     const tracks: Track[] = await this.trackService.findAll();
     return tracks.map((track) => track.params);
   }

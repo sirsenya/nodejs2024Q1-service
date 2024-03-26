@@ -13,6 +13,15 @@ export class LoggingInterceptor implements NestInterceptor {
   constructor(private customLogger: CustomLogger) {}
 
   async intercept(context: ExecutionContext, next) {
+    // process.on('unhandledRejection', (reason: string, p: Promise<any>) => {
+    //   console.error('Unhandled Rejection at:', p, 'reason:', reason);
+    // });
+    // process.on('uncaughtException', (error: Error) => {
+    //   console.error(
+    //     `Caught exception: ${error}\n` + `Exception origin: ${error.stack}`,
+    //   );
+    // });
+
     const now = Date.now();
     const req: Request = context.switchToHttp().getRequest();
     const method = req.method;
@@ -21,13 +30,15 @@ export class LoggingInterceptor implements NestInterceptor {
     const body = JSON.stringify(req.body);
     const res = context.switchToHttp().getResponse();
     const delay = Date.now() - now;
-    const log = `ip: ${
-      req.ip
-    } date: ${new Date()} method: ${method} url: ${url} protocol: ${
-      req.protocol
-    } status code: ${
-      res.statusCode
-    } query params: ${queryParams} body: ${body} delay: ${delay}ms`;
+    let log = '';
+    if (Number(process.env.LOGGING_LEVEL) === 1) {
+      log = `url: ${url} query params: ${queryParams} body: ${body}`;
+    }
+    if (Number(process.env.LOGGING_LEVEL) === 2) {
+      log = `ip: ${req.ip} date: ${new Date()} method: ${method}  protocol: ${
+        req.protocol
+      } status code: ${res.statusCode}  delay: ${delay}ms`;
+    }
     const content = `${log}\n`;
     const fileName = '/src/custom-logger/logs/logs';
     const fileType = '.txt';
@@ -42,14 +53,19 @@ export class LoggingInterceptor implements NestInterceptor {
       }
     } catch (e) {}
 
-    const logStream = createWriteStream(fileName + fileType, {
-      flags: 'a',
-    });
-    logStream.write(content);
+    if (Number(process.env.LOGGING_LEVEL) > 0) {
+      const logStream = createWriteStream(fileName + fileType, {
+        flags: 'a',
+      });
+      logStream.write(content);
+    }
 
     return next.handle().pipe(
       tap(() => {
-        this.customLogger.log(log);
+        if (Number(process.env.LOGGING_LEVEL) > 0) this.customLogger.log(log);
+        if (Number(process.env.LOGGING_LEVEL) > 1) {
+          this.customLogger.verbose(log);
+        }
       }),
     );
   }
