@@ -1,28 +1,38 @@
 import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { tap } from 'rxjs';
 import { CustomLogger } from './custom-logger.service';
+import { Request } from 'express';
+import { createWriteStream } from 'node:fs';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private customLogger: CustomLogger) {}
-  intercept(context: ExecutionContext, next) {
+  async intercept(context: ExecutionContext, next) {
     const now = Date.now();
-    const req = context.switchToHttp().getRequest();
+    const req: Request = context.switchToHttp().getRequest();
     const method = req.method;
     const url = req.url;
-    console.log('GHJKHGFLKJHGGHJLKJHGKLKJHJLJHJLHGLKJHGBNUHKUJ');
+    const queryParams = JSON.stringify(req.params);
+    const body = JSON.stringify(req.body);
+    const res = context.switchToHttp().getResponse();
+    const delay = Date.now() - now;
+    const log = `ip: ${
+      req.ip
+    } date: ${new Date()} method: ${method} url: ${url} protocol: ${
+      req.protocol
+    } status code: ${
+      res.statusCode
+    } query params: ${queryParams} body: ${body} delay: ${delay}ms`;
+    const content = `${log}\n`;
+    const file = '/src/custom-logger/logs.txt';
+    const logStream = createWriteStream(file, {
+      flags: 'a',
+    });
+    logStream.write(content);
 
     return next.handle().pipe(
       tap(() => {
-        const res = context.switchToHttp().getResponse();
-        const delay = Date.now() - now;
-        this.customLogger.log(
-          `${req.ip} ${new Date()} ${method} ${url} ${req.protocol} ${
-            res.statusCode
-          } ${req.headers['content-length'] || '0'} ${
-            req.headers.host.split(':')[1]
-          } ${delay}ms`,
-        );
+        this.customLogger.log(log);
       }),
     );
   }
