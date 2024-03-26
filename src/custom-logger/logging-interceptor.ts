@@ -3,10 +3,15 @@ import { tap } from 'rxjs';
 import { CustomLogger } from './custom-logger.service';
 import { Request } from 'express';
 import { createWriteStream } from 'node:fs';
+import { stat, rename } from 'node:fs/promises';
+import { config } from 'dotenv';
 
+config();
+const maxSize = Number(process.env.MAX_LOG_FILE_SIZE);
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private customLogger: CustomLogger) {}
+
   async intercept(context: ExecutionContext, next) {
     const now = Date.now();
     const req: Request = context.switchToHttp().getRequest();
@@ -24,8 +29,20 @@ export class LoggingInterceptor implements NestInterceptor {
       res.statusCode
     } query params: ${queryParams} body: ${body} delay: ${delay}ms`;
     const content = `${log}\n`;
-    const file = '/src/custom-logger/logs.txt';
-    const logStream = createWriteStream(file, {
+    const fileName = '/src/custom-logger/logs/logs';
+    const fileType = '.txt';
+    try {
+      const fileStat = await stat(fileName + fileType);
+      if (fileStat.size > maxSize) {
+        const date = Date.now();
+        await rename(
+          fileName + fileType,
+          fileName + date.toString() + fileType,
+        );
+      }
+    } catch (e) {}
+
+    const logStream = createWriteStream(fileName + fileType, {
       flags: 'a',
     });
     logStream.write(content);
