@@ -8,14 +8,13 @@ import {
   Put,
   ParseUUIDPipe,
   HttpCode,
-  Req,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { ITrack, Track } from './entities/track.entity';
-import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
-import { ActiveUserData } from 'src/iam/interfaces/active-user-datea.interface';
+import { ActiveUser } from 'src/auth/decorators/auth.decorator';
+import { ActiveUserData } from 'src/auth/interfaces/active-user-data.interface';
 
 @Controller('track')
 export class TrackController {

@@ -1,27 +1,24 @@
 import {
   BadRequestException,
-  ConflictException,
   ForbiddenException,
   Inject,
   Injectable,
-  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignUpDto } from './dto/sign-up.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/database/prisma.service';
-import { HashingService } from 'src/iam/hashing/hashing.service';
 import { LogInDto } from './dto/log-in.dto';
 import { User } from '@prisma/client';
-import jwtConfig from 'src/iam/config/jwt.config';
 import { ConfigType } from '@nestjs/config';
-import { ActiveUserData } from 'src/iam/interfaces/active-user-datea.interface';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Pick } from '@prisma/client/runtime/library';
 import { CustomLogger } from 'src/custom-logger/custom-logger.service';
 import { Request } from 'express';
-import { HttpExceptionFilter } from 'src/exception-filter/exception-filter';
+import jwtConfig from './config/jwt.config';
+import { HashingService } from './hashing/hashing.service';
+import { ActiveUserData } from './interfaces/active-user-data.interface';
 
 @Injectable()
 export class AuthService {
