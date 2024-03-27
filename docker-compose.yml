@@ -34,6 +34,7 @@ services:
       - ./src:/src
       - ./prisma:/prisma
 
+
 networks:
   custom_network:
     name: "custom_network"
@@ -41,3 +42,4 @@ networks:
 volumes:
   postgres-sir:
 
+    

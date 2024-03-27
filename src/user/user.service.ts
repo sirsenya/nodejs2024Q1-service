@@ -12,6 +12,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { User as UserDb } from '@prisma/client';
 import { REQUEST } from '@nestjs/core';
+import { myEmitter } from 'src/custom-logger/logging-interceptor';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -39,6 +40,8 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
+    myEmitter.emit('unhandledRejection');
+
     const usersDb: UserDb[] = await this.prisma.user.findMany({});
     const users: User[] = usersDb.map(
       (userDb) =>

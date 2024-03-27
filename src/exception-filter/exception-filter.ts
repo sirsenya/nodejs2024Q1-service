@@ -16,6 +16,7 @@ const maxSize = Number(process.env.MAX_LOG_FILE_SIZE);
 export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private customLogger: CustomLogger) {}
   async catch(exception: HttpException, host: ArgumentsHost) {
+    console.log(exception.name);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();

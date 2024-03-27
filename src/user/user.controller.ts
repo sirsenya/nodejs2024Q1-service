@@ -31,6 +31,7 @@ export class UserController {
     const users: User[] = await this.userService.findAll();
     return users.map((user) => user.hidePassword());
   }
+  //sds
 
   @Get(':id')
   async findOne(

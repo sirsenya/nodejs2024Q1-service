@@ -6,6 +6,9 @@ import { createWriteStream } from 'node:fs';
 import { stat, rename } from 'node:fs/promises';
 import { config } from 'dotenv';
 
+import { EventEmitter } from 'node:events';
+export const myEmitter = new EventEmitter();
+
 config();
 const maxSize = Number(process.env.MAX_LOG_FILE_SIZE);
 @Injectable()
@@ -13,15 +16,6 @@ export class LoggingInterceptor implements NestInterceptor {
   constructor(private customLogger: CustomLogger) {}
 
   async intercept(context: ExecutionContext, next) {
-    // process.on('unhandledRejection', (reason: string, p: Promise<any>) => {
-    //   console.error('Unhandled Rejection at:', p, 'reason:', reason);
-    // });
-    // process.on('uncaughtException', (error: Error) => {
-    //   console.error(
-    //     `Caught exception: ${error}\n` + `Exception origin: ${error.stack}`,
-    //   );
-    // });
-
     const now = Date.now();
     const req: Request = context.switchToHttp().getRequest();
     const method = req.method;
@@ -59,6 +53,24 @@ export class LoggingInterceptor implements NestInterceptor {
       });
       logStream.write(content);
     }
+
+    myEmitter.on('unhandledRejection', () => {
+      const errorText = 'Caught unhandledRejection event';
+      const logStream = createWriteStream(fileName + fileType, {
+        flags: 'a',
+      });
+      logStream.write(errorText);
+      this.customLogger.error(errorText);
+    });
+
+    myEmitter.on('uncaughtException', () => {
+      const errorText = 'Caught uncaughtException event';
+      const logStream = createWriteStream(fileName + fileType, {
+        flags: 'a',
+      });
+      logStream.write(errorText);
+      this.customLogger.error(errorText);
+    });
 
     return next.handle().pipe(
       tap(() => {
