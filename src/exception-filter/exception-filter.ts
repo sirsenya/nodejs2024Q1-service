@@ -46,12 +46,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     });
 
     logStream.write(content);
+    this.customLogger.error(log);
     response.status(status).json({
       statusCode: status,
       message: message,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
-    this.customLogger.error(log);
   }
 }

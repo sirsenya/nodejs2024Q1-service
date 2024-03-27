@@ -40,8 +40,6 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    myEmitter.emit('unhandledRejection');
-
     const usersDb: UserDb[] = await this.prisma.user.findMany({});
     const users: User[] = usersDb.map(
       (userDb) =>

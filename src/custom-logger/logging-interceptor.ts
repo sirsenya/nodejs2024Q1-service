@@ -54,24 +54,6 @@ export class LoggingInterceptor implements NestInterceptor {
       logStream.write(content);
     }
 
-    myEmitter.on('unhandledRejection', () => {
-      const errorText = 'Caught unhandledRejection event';
-      const logStream = createWriteStream(fileName + fileType, {
-        flags: 'a',
-      });
-      logStream.write(errorText);
-      this.customLogger.error(errorText);
-    });
-
-    myEmitter.on('uncaughtException', () => {
-      const errorText = 'Caught uncaughtException event';
-      const logStream = createWriteStream(fileName + fileType, {
-        flags: 'a',
-      });
-      logStream.write(errorText);
-      this.customLogger.error(errorText);
-    });
-
     return next.handle().pipe(
       tap(() => {
         if (Number(process.env.LOGGING_LEVEL) > 0) this.customLogger.log(log);

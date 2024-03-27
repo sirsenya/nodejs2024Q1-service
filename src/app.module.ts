@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CustomLoggerModule } from './custom-logger/custom-logger.module';
 import { PrismaModule } from './database/prisma.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { PrismaModule } from './database/prisma.module';
     CustomLoggerModule,
     PrismaModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
