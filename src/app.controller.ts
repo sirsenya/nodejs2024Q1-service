@@ -1,12 +1,18 @@
-// import { Controller, Get } from '@nestjs/common';
-// import { AppService } from './app.service';
+import { Controller, Get } from '@nestjs/common';
+import { myEmitter } from './custom-logger/logging-interceptor';
+import { Auth } from './auth/decorators/auth.decorator';
+import { AuthType } from './auth/enums/auth-type.enum';
 
-// @Controller()
-// export class AppController {
-//   constructor(private readonly appService: AppService) {}
+@Auth(AuthType.None)
+@Controller()
+export class AppController {
+  @Get()
+  async unhandledRejection() {
+    myEmitter.emit('unhandledRejection');
+  }
 
-//   @Get()
-//   getHello(): string {
-//     return this.appService.getHello();
-//   }
-// }
+  @Get('/doc')
+  async uncaughtException() {
+    myEmitter.emit('uncaughtException');
+  }
+}
