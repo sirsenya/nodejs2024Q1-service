@@ -13,7 +13,10 @@ import { UserService } from './user.service';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IUser, User } from './entities/user.entity';
+// import { Auth } from 'src/auth/decorators/auth.decorator';
+// import { AuthType } from 'src/auth/enums/auth-type.enum';
 
+// @Auth(AuthType.None)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

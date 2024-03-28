@@ -23,7 +23,7 @@ myEmitter.on('unhandledRejection', async () => {
   const fileType = '.txt';
   try {
     const fileStat = await stat(fileName + fileType);
-    if (fileStat.size > 1000) {
+    if (fileStat.size > Number(process.env.MAX_LOG_FILE_SIZE)) {
       const date = Date.now();
       await rename(fileName + fileType, fileName + date.toString() + fileType);
     }
@@ -43,7 +43,7 @@ myEmitter.on('uncaughtException', async () => {
   const fileType = '.txt';
   try {
     const fileStat = await stat(fileName + fileType);
-    if (fileStat.size > 1000) {
+    if (fileStat.size > Number(process.env.MAX_LOG_FILE_SIZE)) {
       const date = Date.now();
       await rename(fileName + fileType, fileName + date.toString() + fileType);
     }
