@@ -12,37 +12,42 @@ import {
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { ITrack, Track } from './entities/track.entity';
 
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto) {
-    return this.trackService.create(createTrackDto).params;
+  async create(@Body() createTrackDto: CreateTrackDto): Promise<ITrack> {
+    const track: Track = await this.trackService.create(createTrackDto);
+    return track.params;
   }
 
   @Get()
-  findAll() {
-    return this.trackService.findAll().map((track) => track.params);
+  async findAll(): Promise<ITrack[]> {
+    const tracks: Track[] = await this.trackService.findAll();
+    return tracks.map((track) => track.params);
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.trackService.findOne(id).params;
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<ITrack> {
+    const track: Track = await this.trackService.findOne(id);
+    return track.params;
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
-  ) {
-    return this.trackService.update(id, updateTrackDto).params;
+  ): Promise<ITrack> {
+    const track: Track = await this.trackService.update(id, updateTrackDto);
+    return track.params;
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.trackService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+    await this.trackService.remove(id);
   }
 }

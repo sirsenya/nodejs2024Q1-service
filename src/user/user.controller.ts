@@ -12,37 +12,46 @@ import {
 import { UserService } from './user.service';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { IUser, User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto).hidePassword();
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<Omit<IUser, 'password'>> {
+    const user: User = await this.userService.create(createUserDto);
+    return user.hidePassword();
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll().map((user) => user.hidePassword());
+  async findAll(): Promise<Omit<IUser, 'password'>[]> {
+    const users: User[] = await this.userService.findAll();
+    return users.map((user) => user.hidePassword());
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.userService.findOne(id).hidePassword();
+  async findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<Omit<IUser, 'password'>> {
+    const user: User = await this.userService.findOne(id);
+    return user.hidePassword();
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ) {
-    return this.userService.update(id, updatePasswordDto).hidePassword();
+  ): Promise<Omit<IUser, 'password'>> {
+    const user: User = await this.userService.update(id, updatePasswordDto);
+    return user.hidePassword();
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.userService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+    await this.userService.remove(id);
   }
 }

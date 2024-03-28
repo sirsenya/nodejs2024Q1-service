@@ -1,6 +1,6 @@
-import { Album } from 'src/album/entities/album.entity';
-import { Artist } from 'src/artist/entities/artist.entity';
-import { Track } from 'src/track/entities/track.entity';
+import { IAlbum } from 'src/album/entities/album.entity';
+import { IArtist } from 'src/artist/entities/artist.entity';
+import { ITrack } from 'src/track/entities/track.entity';
 
 export class Fav {
   constructor(public params: IFavorites) {}
@@ -13,7 +13,7 @@ export interface IFavorites {
 }
 
 export interface IFavoritesResponse {
-  artists: Artist[];
-  albums: Album[];
-  tracks: Track[];
+  artists: IArtist[];
+  albums: IAlbum[];
+  tracks: ITrack[];
 }
