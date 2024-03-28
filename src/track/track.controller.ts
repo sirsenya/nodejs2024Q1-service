@@ -13,8 +13,6 @@ import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { ITrack, Track } from './entities/track.entity';
-import { ActiveUser } from 'src/auth/decorators/auth.decorator';
-import { ActiveUserData } from 'src/auth/interfaces/active-user-data.interface';
 
 @Controller('track')
 export class TrackController {
@@ -27,7 +25,7 @@ export class TrackController {
   }
 
   @Get()
-  async findAll(@ActiveUser() user: ActiveUserData): Promise<ITrack[]> {
+  async findAll(): Promise<ITrack[]> {
     const tracks: Track[] = await this.trackService.findAll();
     return tracks.map((track) => track.params);
   }

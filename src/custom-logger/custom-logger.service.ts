@@ -1,38 +1,30 @@
-import {
-  ConsoleLogger,
-  Injectable,
-  LoggerService,
-  NestMiddleware,
-  Scope,
-} from '@nestjs/common';
+import { Injectable, LoggerService, Scope } from '@nestjs/common';
 import { config } from 'dotenv';
-import { NextFunction } from 'express';
-import { Request } from 'express';
 config();
 const loggingLevel = Number(process.env.LOGGING_LEVEL);
 @Injectable({ scope: Scope.TRANSIENT })
 export class CustomLogger implements LoggerService {
-  log(message: any, ...optionalParams: any[]) {
+  log(message: any) {
     if (loggingLevel > 0) console.log(`LOG: ${message}`);
   }
 
-  fatal(message: any, ...optionalParams: any[]) {
+  fatal() {
     return;
   }
 
-  error(message: any, ...optionalParams: any[]) {
+  error(message: any) {
     console.error(`ERROR: ${message}`);
   }
 
-  warn(message: any, ...optionalParams: any[]) {
+  warn() {
     return;
   }
 
-  debug?(message: any, ...optionalParams: any[]) {
+  debug?() {
     return;
   }
 
-  verbose?(message: any, ...optionalParams: any[]) {
+  verbose?(message: any) {
     if (loggingLevel > 1) console.log(`VERBOSE: ${message}`);
   }
 }
